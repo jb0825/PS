@@ -1,4 +1,4 @@
-package com.ps.algorithm;
+package com.ps.data_structure;
 
 import java.util.Scanner;
 
