@@ -13,8 +13,8 @@ public class Stack {
      */
     public Stack (int size) {
         max = size;
-        stack = new int[size];
         top = -1;
+        stack = new int[size];
     }
 
     /**
