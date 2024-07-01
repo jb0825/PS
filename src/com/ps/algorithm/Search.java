@@ -17,6 +17,7 @@ public class Search {
     /**
      * 선형 검색 (Linear search)
      * 원하는 키 값을 갖는 요소를 만날 떄까지 맨 앞부터 순서대로 요소를 검색.
+     * 시간 복잡도: O(n)
      */
     static int linearSearch (int[] array, int key) {
         for (int i = 0; i < array.length; i++)
@@ -28,6 +29,7 @@ public class Search {
     /**
      * 이진 검색 (Binary search)
      * 이미 정렬이 완료된 배열에서 검색 범위를 절반씩 좁혀가며 요소를 검색.
+     * 시간 복잡도: O(log n)
      */
     static int binarySearch (int[] array, int key) {
         int pl = 0;
@@ -43,6 +45,9 @@ public class Search {
         return -1;
     }
 
+    /**
+     * 이진 검색을 재귀 형태로 구현
+     */
     static int binarySearch2 (int[] array, int key, int pl, int pr) {
         if (pl >= pr) return -1;
 
