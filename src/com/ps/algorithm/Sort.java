@@ -1,15 +1,19 @@
 package com.ps.algorithm;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Sort {
 
     public static void main (String[] args) {
         Sort sort = new Sort();
-        int[] arr = {9, 33, 12, 123, 3, 3, 4, 7, 1};
+        int[] arr = {8, 1, 4, 2, 7, 6, 3, 5};
 
         System.out.println("정렬 전: " + Arrays.toString(arr));
 
+        /*
         // Bubble sort (가장 큰 값부터 정렬)
         System.out.println("\n *** Bubble Sort *** ");
         System.out.println("정렬 완료: " + Arrays.toString(sort.bubbleSort(arr)));
@@ -25,6 +29,19 @@ public class Sort {
         // Straight insertion sort
         System.out.println("\n *** Straight Insertion Sort ***");
         System.out.println("정렬 완료 : " + Arrays.toString(sort.straightInsertionSort(arr)));
+         */
+
+        // Shell sort
+        System.out.println("\n *** Shell Sort ***");
+        System.out.println("정렬 완료 : " + Arrays.toString(sort.shellSort(arr)));
+
+        // Shell sort (Knuth 간격 수열 사용)
+        System.out.println("\n *** Shell Sort (using Knuth sequences) ***");
+        System.out.println("정렬 완료 : " + Arrays.toString(sort.shellSortKnuth(arr)));
+
+        // Shell sort (Pratt 간격 수열 사용)
+        System.out.println("\n *** Shell Sort (using Pratt sequences) ***");
+        System.out.println(Arrays.toString(sort.shellSortPratt(arr)));
     }
 
     public void printArr (int[] arr, int pointIdx) {
@@ -132,5 +149,114 @@ public class Sort {
             arr[j] = temp;
         }
         return arr;
+    }
+
+    /**
+     * 셸 정렬 (Shell sort)
+     * 정렬할 배열의 요소를 그룹으로 나눠 각 그룹별로 단순 삽입 정렬을 수행하고 그룹을 다시 나누면서 정렬을 반복
+     * (h개 요소에 대해 h-정렬을 반복)
+     * e.g. 배열의 크기가 8일 때, 4-정렬, 2-정렬, 1-정렬을 반복하며 정렬함
+     * 시간 복잡도 : O(n²)
+     */
+    public int[] shellSort (int[] unsortedArr) {
+        int n = unsortedArr.length;
+
+        // h-정렬을 수행하기 위한 간격 수열 생성
+        // e.g. n = 8, [4, 2, 1]
+        int h = n / 2;
+        ArrayList<Integer> sequence = new ArrayList<>();
+        while (h > 0) {
+            sequence.add(h);
+            h /= 2;
+        }
+
+        // 셸 정렬 수행
+        return doShellSort(unsortedArr, sequence.stream().mapToInt(i -> i).toArray());
+    }
+
+    /**
+     * 셸 정렬 수행하는 함수
+     */
+    public int[] doShellSort (int[] unsortedArr, int[] sequence) {
+        int n = unsortedArr.length;
+        int[] arr = Arrays.copyOf(unsortedArr, n);
+
+        // 간격 수열에 따라 반복
+        for (int h : sequence) {
+            System.out.println(h + "-정렬");
+            // 각 부분 배열에서 삽입 정렬 수행
+            for (int i = h; i < n; i++) {
+                int temp = arr[i];
+                int j;
+                System.out.println("삽입할 요소 (arr[" + i + "]) :" + temp);
+                for (j = i; j >= h && arr[j - h] > temp; j -= h) {
+                    // arr[i] 보다 큰 요소를 오른쪽으로 이동시킴
+                    arr[j] = arr[j - h];
+                    printArr(arr, j);
+                }
+                // arr[i] 를 부분 배열의 적절한 위치에 삽입함
+                arr[j] = temp;
+                printArr(arr, j);
+            }
+        }
+
+        return arr;
+    }
+
+
+    /**
+     * Knuth 간격 수열을 사용하는 셸 정렬
+     *
+     * 기존 셸 정렬의 경우, n 이 배열의 크기이고 h 가 간격이라고 한다면 [h = n / 2^k] 와 같은 수열을 이용하여 정렬한다. (k는 1부터 시작하는 정수)
+     * 이 때 알고리즘의 평균 시간 복잡도는 O(n²) 이다.
+     * 셸 정렬에서 어떤 간격 수열을 사용하는지에 따라 알고리즘의 성능을 향상시킬 수 있다.
+     *
+     * Knuth 간격 수열은 [h = 3k + 1] 와 같은 규칙을 따른다. (k는 0부터 시작하는 정수) h값이 서로 배수가 되지 않는 수열이다.
+     * (h = ..., 121, 40, 13, 4, 1)
+     *
+     * 시간 복잡도 : O(n^3/2)
+     */
+    public int[] shellSortKnuth (int[] unsortedArr) {
+        ArrayList<Integer> sequence = new ArrayList<>();
+        int h = 1;
+
+        // Knuth 간격 수열 생성 [h = 3k + 1]
+        while (h < unsortedArr.length) {
+            sequence.add(h);
+            h = 3 * h + 1;
+        }
+        Collections.reverse(sequence);
+
+        // 셸 정렬 수행
+        return doShellSort(unsortedArr, sequence.stream().mapToInt(i -> i).toArray());
+    }
+
+    /**
+     * Pratt 간격 수열을 사용하는 셸 정렬
+     *
+     * 셸 정렬의 간격 수열 중 평균 시간 복잡도가 가장 적은 간격 수열이다.
+     * Pratt 간격 수열은 [h = 2^i * 3^j] 와 같은 규칙을 따른다. (i, j 는 0 이상의 정수)
+     * 즉, Pratt 간격 수열은 2와 3의 거듭제곱의 곱으로 이루어진다.
+     *
+     * 시간 복잡도 : O(n \ log² n)
+     */
+    public int[] shellSortPratt (int[] unsortedArr) {
+        ArrayList<Integer> sequence = new ArrayList<>();
+        int n = unsortedArr.length;
+        int h = 1;
+
+        // Pratt 간격 수열 생성 [h = 2^i * 3^j]
+        while (h <= n) {
+            int q = h;
+            while (q <= n) {
+                sequence.add(q);
+                q *= 3;
+            }
+            h *= 2;
+        }
+        sequence.sort(Collections.reverseOrder());
+
+        // 셸 정렬 수행
+        return doShellSort(unsortedArr, sequence.stream().mapToInt(Integer::intValue).toArray());
     }
 }

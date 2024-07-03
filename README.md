@@ -9,6 +9,9 @@
         - 버블 정렬 (Bubble sort)
         - 단순 선택 정렬 (Straight selection sort)
         - 단순 삽입 정렬 (Straight insertion sort)
+        - 셸 정렬 (Shell sort)
+        - Knuth 간격 수열을 사용한 셸 정렬
+        - Pratt 간격 수열을 사용한 셸 정렬
 
 ## 자료구조
     1. 스택 (Stack)
