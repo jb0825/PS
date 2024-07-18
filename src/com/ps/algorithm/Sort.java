@@ -1,6 +1,5 @@
 package com.ps.algorithm;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +28,6 @@ public class Sort {
         // Straight insertion sort
         System.out.println("\n *** Straight Insertion Sort ***");
         System.out.println("정렬 완료 : " + Arrays.toString(sort.straightInsertionSort(arr)));
-         */
 
         // Shell sort
         System.out.println("\n *** Shell Sort ***");
@@ -42,6 +40,19 @@ public class Sort {
         // Shell sort (Pratt 간격 수열 사용)
         System.out.println("\n *** Shell Sort (using Pratt sequences) ***");
         System.out.println(Arrays.toString(sort.shellSortPratt(arr)));
+         */
+
+        // Quick sort
+        System.out.println("\n *** Quick Sort ***");
+        sort.quickSort(arr);
+
+        // Merge sort
+        System.out.println("\n *** Merge Sort ***");
+        sort.mergeSort(arr);
+
+        // Counting sort
+        System.out.println("\n *** Counting Sort ***");
+        System.out.println(Arrays.toString(sort.countingSort(arr)));
     }
 
     public void printArr (int[] arr, int pointIdx) {
@@ -49,6 +60,15 @@ public class Sort {
         for (int i = 0; i < arr.length; i++) {
             boolean point = pointIdx == i;
             System.out.print((point ? "(" : "") + arr[i] + (point ? ")" : ""));
+            if (i + 1 < arr.length) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+    public void printArr (int[] arr) {
+        System.out.print("[");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]);
             if (i + 1 < arr.length) System.out.print(", ");
         }
         System.out.println("]");
@@ -259,4 +279,140 @@ public class Sort {
         // 셸 정렬 수행
         return doShellSort(unsortedArr, sequence.stream().mapToInt(Integer::intValue).toArray());
     }
+
+    /**
+     * 퀵 정렬 (Quick sort)
+     * 분할 정복 (Divide and Conquer) 알고리즘의 일종으로, 배열을 피벗을 기준으로 두 부분으로 나누고 각각을 재귀적으로 정렬하는 알고리즘
+     * 시간 복잡도 : O(n log n)
+     */
+    public void quickSort (int[] arr, int left, int right) {
+        int pl = left;              // 왼쪽 인덱스
+        int pr = right;             // 오른쪽 인덱스
+        int x = arr[(pl + pr) / 2]; // 피벗
+
+        // 배열을 피벗을 기준으로 두 그룹으로 나누기
+        // 0 ~ pl - 1 : 피벗보다 값이 작은 그룹
+        // pl + 1 ~ arr.length - 1 : 피벗보다 값이 큰 그룹
+        do {
+            // arr[pl] >= x, arr[pr] <= x 가 성립하는 pl, pr 인덱스 찾기
+            while (arr[pl] < x) pl++;
+            while (arr[pr] > x) pr--;
+            // pl, pr 을 찾았다면 두 요소의 값을 교환
+            if (pl <= pr) {
+                int temp = arr[pl];
+                arr[pl] = arr[pr];
+                arr[pr] = temp;
+                pl++;
+                pr--;
+            }
+        } while (pl <= pr);
+
+        printArr(arr);
+
+        // pr 이 left 보다 오른쪽에 있다면 왼쪽 그룹을 다시 나누기
+        if (left < pr) quickSort(arr, left, pr);
+        // pl 이 right 보다 왼쪽에 있으면 오른쪽 그룹을 다시 나누기
+        if (pl < right) quickSort(arr, pl, right);
+    }
+
+    public int[] quickSort (int[] unsortedArr) {
+        int[] arr = Arrays.copyOf(unsortedArr, unsortedArr.length);
+        quickSort(arr, 0, arr.length - 1);
+
+        return arr;
+    }
+
+    /**
+     * 병합 정렬 (Merge sort)
+     * 분할 정복 (Divide and Conquer) 알고리즘의 일종으로, 배열을 작은 부분으로 나누고 각 부분을 정렬한 후 병합하여 전체를 정렬하는 알고리즘
+     * 시간 복잡도 : O(n log n)
+     */
+    public void mergeSort(int[] arr, int[] temp, int left, int right) {
+        if (left < right) {
+            int center = (left + right) / 2;
+            // 배열 앞부분을 분할
+            mergeSort(arr, temp, left, center);
+            // 배열 뒷부분을 분할
+            mergeSort(arr, temp, center + 1, right);
+
+            // 정렬된 두 개의 부분 배열을 병합
+            int l = left;       // 왼쪽 부분 배열의 인덱스
+            int r = center + 1; // 오른쪽 부분 배열의 인덱스
+            int idx = left;     // temp 배열 인덱스
+
+            // 왼쪽 부분 배열과 오른쪽 부분 배열의 현재 인덱스가 각각 그들의 끝을 넘지 않을 동안 루프 실행
+            while (l <= center && r <= right) {
+                // 왼쪽 부분 배열과 오른쪽 부분 배열 중 더 작은 값을 temp 배열에 추가
+                if (arr[l] <= arr[r])
+                    temp[idx++] = arr[l++];
+                else
+                    temp[idx++] = arr[r++];
+            }
+
+            // 병합을 완료하고 나면 왼쪽 혹은 오른쪽 배열 중 하나가 temp 에 합쳐지지 않고 남아있게 됨.
+            // 남아있는 쪽의 배열을 temp 에 병합
+            // 왼쪽 배열의 요소를 temp 배열에 병합
+            if (l <= center)
+                System.arraycopy(arr, l, temp, idx, center - l + 1);
+            // 오른쪽 배열의 요소를 temp 배열에 병합
+            if (r <= right)
+                System.arraycopy(arr, r, temp, idx, right - r + 1);
+            printArr(temp);
+
+            // temp 배열에서 원래 배열 arr 로 복사
+            System.arraycopy(temp, left, arr, left, right - left + 1);
+
+        }
+    }
+
+    public int[] mergeSort (int[] unsortedArr) {
+        int[] arr = Arrays.copyOf(unsortedArr, unsortedArr.length);
+        int[] temp = new int[arr.length];
+        mergeSort(arr, temp, 0, arr.length - 1);
+
+        return arr;
+    }
+
+    /**
+     * 도수 정렬 (Counting Sort)
+     * 주어진 배열의 요소들의 빈도를 세어서 정렬하는 알고리즘. 특정 범위 내의 정수로 구성된 배열에 대해 매우 효율적임.
+     *
+     * 도수 정렬의 순서 :
+     *  1. 배열을 도수분포표로 구현
+     *  2. 도수분포표로 변환된 배열을 누적 도수분포표로 구현
+     *  3. 배열을 순회하며 결과 배열에 값을 저장
+     *  4. 결과 배열의 값을 기존 배열에 복사
+     *
+     * 시간 복잡도 : O(n + k), n = 배열의 크기, k = 배열 요소의 최댓값
+     */
+   public int[] countingSort (int[] unsortedArr) {
+        int[] arr = Arrays.copyOf(unsortedArr, unsortedArr.length);
+
+        // 배열의 최댓값 찾기
+       int max = arr[0];
+       for (int n : arr)
+           if (n > max) max = n;
+
+       int[] freq = new int[max + 1];      // 누적 도수를 담을 배열
+       int[] result = new int[arr.length]; // 정렬된 결과를 저장할 배열
+       int i;
+
+       // 배열 arr 을 도수분포표로 만들기
+       for (int n : arr) freq[n] ++;
+       System.out.print("도수분포표 : ");
+       printArr(freq);
+
+       // 도수분포표를 누적 도수분포표로 만들기
+       for (i = 1; i < freq.length; i++) freq[i] += freq[i - 1];
+       System.out.print("누적 도수분포표 : ");
+       printArr(freq);
+
+       // 배열을 순회하면서 정렬된 결과를 결과 배열에 저장
+       for (i = arr.length - 1; i >= 0; i--) result[--freq[arr[i]]] = arr[i];
+
+       // 정렬된 결과를 원본 배열 arr 에 복사
+       System.arraycopy(result, 0, arr, 0, arr.length);
+
+       return arr;
+   }
 }
