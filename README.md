@@ -25,5 +25,6 @@
 ### 연결 리스트 (Linked list)
 * 단일 연결 리스트 (Singly linked list)
 * 이중 연결 리스트 (Doubly linked list)
+* 원형 이중 연결 리스트 (Circular doubly linked list)
 
 ## 문제 풀이

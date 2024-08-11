@@ -19,7 +19,10 @@ public class LinkedList {
         // SinglyLinkedList<Integer> linkedList = new SinglyLinkedList<>();
 
         // 이중 연결 리스트
-        DoublyLinkedList<Integer> linkedList = new DoublyLinkedList<>();
+        // DoublyLinkedList<Integer> linkedList = new DoublyLinkedList<>();
+
+        // 원형 이중 연결 리스트
+        CircularDoublyLinkedList<Integer> linkedList = new CircularDoublyLinkedList<>();
 
         while (true) {
             int menu, x;
