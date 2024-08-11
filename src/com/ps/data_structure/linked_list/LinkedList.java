@@ -16,7 +16,10 @@ public class LinkedList {
     public static void main (String[] args) {
         Scanner sc = new Scanner(System.in);
         // 단일 연결 리스트
-        SinglyLinkedList<Integer> linkedList = new SinglyLinkedList<>();
+        // SinglyLinkedList<Integer> linkedList = new SinglyLinkedList<>();
+
+        // 이중 연결 리스트
+        DoublyLinkedList<Integer> linkedList = new DoublyLinkedList<>();
 
         while (true) {
             int menu, x;
@@ -78,9 +81,9 @@ public class LinkedList {
                 System.out.println("\n");
 
             } catch (InputMismatchException e) {
-                System.out.println("Error: 잘못된 값을 입력했습니다. 다시 입력해 주세요.");
+                System.out.println("Error: 잘못된 값을 입력했습니다.\n");
             } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage() + "\n");
             }
         }
 
