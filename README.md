@@ -26,5 +26,7 @@
 * 단일 연결 리스트 (Singly linked list)
 * 이중 연결 리스트 (Doubly linked list)
 * 원형 이중 연결 리스트 (Circular doubly linked list)
+### 트리 (Tree)
+* 이진 탐색 트리 (Binary search tree)
 
 ## 문제 풀이
