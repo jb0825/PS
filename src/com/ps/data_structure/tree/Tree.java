@@ -34,10 +34,10 @@ public class Tree {
             int menu, x;
 
             System.out.print(
-                "———————————————————————*** Binary Search Tree ***—————————————————————\n" +
-                "| (1)Insert (2)Delete (3)Preorder (4)Inorder (5)Postorder            |\n" +
-                "| (6)Clear (0)Exit                                                   |\n" +
-                "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n" +
+                "—————————————————*** Binary Search Tree ***————————————————\n" +
+                "| (1)Insert (2)Delete (3)Preorder (4)Inorder (5)Postorder |\n" +
+                "| (0)Exit                                                 |\n" +
+                "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n" +
                 "insert: "
             );
 
